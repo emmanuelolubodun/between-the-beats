@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Between the Beats
 
-## Getting Started
+An interactive, scroll-driven story about high blood pressure. It is the web version of the poster "The Pressure We Live In" (AD 609, Project 2, Emmanuel Olubodun, MFA Interaction Design, Purdue). The project began as "Under Pressure", which is still the folder name.
 
-First, run the development server:
+- `/` is the guided story: hero, seven data stories, trend, how a reading works, sources. Light and dark themes follow the device, with a toggle in the top bar.
+- `/stories/<slug>` is a deep-dive page for each story, with the full data table and links to the original sources.
+
+`CLAUDE.md` holds the brief, the design system, every data point, and the accessibility rules. Section 12 records the later decisions (deep-dive pages, GSAP and Lenis, npm).
+
+## Run it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build and deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+Deploy on Vercel: push the repo to GitHub, then import it at vercel.com/new (framework preset: Next.js, no settings or environment variables needed). Fonts are self-hosted through `next/font`, so there is no runtime call to Google Fonts.
 
-To learn more about Next.js, take a look at the following resources:
+## Where things live
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `data/` the source data (`countries.json`, `datasets.ts`). Do not edit numbers.
+- `lib/stories.ts` story metadata and the text of the deep-dive pages.
+- `components/core/` the pulse core and the vessel chart (fan on wide screens, bars on phones).
+- `components/chapters/` one file per chapter; each exports an Explorer reused by its deep-dive page.
+- `lib/motion.ts`, `components/layout/SmoothScroll.tsx` GSAP and Lenis. All scroll motion is off under reduced motion.

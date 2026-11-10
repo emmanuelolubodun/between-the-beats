@@ -1,26 +1,423 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+/* Design tokens. Dark is the poster's own palette (CLAUDE.md section 5) and the default.
+   Light is a matching set, darkened so every text color keeps at least 4.5:1 contrast.
+   The theme follows the device unless the visitor picks one (data-theme on <html>). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: #1b1a21;
+  --canvas-2: #141319;
+  --panel: #232030;
+  --line: #34303e;
+  --ink: #f2efea;
+  --mute: #c9c3d0;
+  --faint: #8a8390;
+  --pulse: #e86a5a;
+  --pulse-deep: #e0574b;
+  --on-pulse: #141319;
+
+  --reg-seasia: #e58a3c;
+  --reg-wpac: #e5695c;
+  --reg-africa: #c64b9f;
+  --reg-americas: #4e8fd0;
+  --reg-europe: #46a986;
+  --reg-emed: #8e7bd6;
+
+  --women: #c77da8;
+  --diabetes: #e8b14a;
+  --dash: #8ad4bd;
+  --teal: #5fb89c;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --canvas: #f4f2f7;
+    --canvas-2: #eae7f0;
+    --panel: #fbfafd;
+    --line: #d8d3df;
+    --ink: #1b1a21;
+    --mute: #4a4553;
+    --faint: #67616f;
+    --pulse: #b93b32;
+    --pulse-deep: #a5322a;
+    --on-pulse: #fbfafd;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --reg-seasia: #a65a16;
+    --reg-wpac: #b8423a;
+    --reg-africa: #9c2f78;
+    --reg-americas: #2b66a6;
+    --reg-europe: #24785d;
+    --reg-emed: #6550b5;
+
+    --women: #9a4677;
+    --diabetes: #8c620a;
+    --dash: #21775f;
+    --teal: #237a60;
+    color-scheme: light;
   }
 }
 
+:root[data-theme='light'] {
+  --canvas: #f4f2f7;
+  --canvas-2: #eae7f0;
+  --panel: #fbfafd;
+  --line: #d8d3df;
+  --ink: #1b1a21;
+  --mute: #4a4553;
+  --faint: #67616f;
+  --pulse: #b93b32;
+  --pulse-deep: #a5322a;
+  --on-pulse: #fbfafd;
+
+  --reg-seasia: #a65a16;
+  --reg-wpac: #b8423a;
+  --reg-africa: #9c2f78;
+  --reg-americas: #2b66a6;
+  --reg-europe: #24785d;
+  --reg-emed: #6550b5;
+
+  --women: #9a4677;
+  --diabetes: #8c620a;
+  --dash: #21775f;
+  --teal: #237a60;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-2: var(--canvas-2);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-mute: var(--mute);
+  --color-faint: var(--faint);
+  --color-pulse: var(--pulse);
+  --color-pulse-deep: var(--pulse-deep);
+  --color-on-pulse: var(--on-pulse);
+  --color-reg-seasia: var(--reg-seasia);
+  --color-reg-wpac: var(--reg-wpac);
+  --color-reg-africa: var(--reg-africa);
+  --color-reg-americas: var(--reg-americas);
+  --color-reg-europe: var(--reg-europe);
+  --color-reg-emed: var(--reg-emed);
+  --color-women: var(--women);
+  --color-diabetes: var(--diabetes);
+  --color-dash: var(--dash);
+  --color-teal: var(--teal);
+  --font-sans: var(--font-inter);
+}
+
+html {
+  overflow-x: clip;
+  background: var(--canvas);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: clip;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--pulse);
+  color: var(--on-pulse);
+}
+
+:focus-visible {
+  outline: 3px solid var(--pulse);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Sections take focus after a jump from the section menu; the jump itself is the cue, not a ring. */
+section[tabindex='-1']:focus,
+footer[tabindex='-1']:focus,
+main [tabindex='-1']:focus {
+  outline: none;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Fluid type scale from CLAUDE.md: hero 96 / h2 52 / h3 32 / body 20 / small 16 / caption 14 */
+.t-hero {
+  font-size: clamp(3rem, 1.6rem + 6vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+}
+.t-h2 {
+  font-size: clamp(2.125rem, 1.5rem + 2.6vw, 3.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+  font-weight: 700;
+}
+.t-h3 {
+  font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+.t-body {
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.6;
+}
+.t-small {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.t-caption {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+/* Heartbeat for the pulse core (~1.6s), plus two expanding rings. */
+.pulse-beat {
+  animation: beat 1.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.pulse-ring {
+  animation: ring 3.2s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+.pulse-ring--late {
+  animation-delay: 1.6s;
+}
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  12% {
+    transform: scale(1.07);
+  }
+  24% {
+    transform: scale(0.99);
+  }
+  36% {
+    transform: scale(1.04);
+  }
+  52% {
+    transform: scale(1);
+  }
+}
+@keyframes ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Moving ECG: one period scrolls by per heartbeat. The negative delay lines each spike up
+   with the swell of .pulse-beat (peak at 12% of its cycle), so the core seems to send it out. */
+.ecg-scroll {
+  animation: ecg-scroll 1.6s linear infinite;
+  animation-delay: -1.44s;
+}
+@keyframes ecg-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--ecg-shift));
+  }
+}
+/* The trail: bright where it leaves the core (left of center), faint where it arrives. */
+.ecg-fade {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 38%,
+    #000 50%,
+    rgb(0 0 0 / 0.18) 56%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(90deg, transparent 0%, #000 38%, #000 50%, rgb(0 0 0 / 0.18) 56%, transparent 100%);
+}
+
+/* Thin scroll cue line that drips downward. */
+.cue-line {
+  animation: cue 2.2s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes cue {
+  0% {
+    transform: scaleY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+
+/* Range slider styled with tokens; a 44px tall hit area. */
+.range {
+  appearance: none;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent, var(--dash)) var(--fill), var(--line) var(--fill));
+}
+.range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent, var(--dash)) var(--fill), var(--line) var(--fill));
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 4px solid var(--accent, var(--dash));
+}
+.range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 4px solid var(--accent, var(--dash));
+}
+
+/* A custom handle (the salt shaker) is drawn over the native thumb, which stays usable but unseen. */
+.range--custom::-webkit-slider-thumb {
+  opacity: 0;
+  width: 44px;
+  height: 44px;
+  margin-top: -19px;
+}
+.range--custom::-moz-range-thumb {
+  opacity: 0;
+  width: 44px;
+  height: 44px;
+}
+.range--custom:focus-visible {
+  outline-offset: 6px;
+}
+
+/* Salt grains falling from the shaker onto the track. */
+.salt-grain {
+  animation: salt-fall 0.9s ease-in infinite;
+}
+@keyframes salt-fall {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--drift), var(--fall));
+    opacity: 0;
+  }
+}
+
+/* Sleep: z's drift up from the moon. */
+.sleep-z {
+  animation: z-rise 2.1s ease-out infinite;
+  opacity: 0;
+}
+@keyframes z-rise {
+  0% {
+    transform: translate(0, 0) scale(0.7);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--drift), -16px) scale(1.1);
+    opacity: 0;
+  }
+}
+.moon-glow {
+  animation: moon-glow 3.2s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@keyframes moon-glow {
+  from {
+    transform: scale(0.85);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+
+/* Activity: the shoe bounces in stride and speed lines stream behind it. */
+.shoe-bob {
+  animation: shoe-bob var(--bob-speed, 0.8s) ease-in-out infinite alternate;
+}
+@keyframes shoe-bob {
+  to {
+    transform: translateY(-4px);
+  }
+}
+.speed-line {
+  animation: speed-line 0.7s linear infinite;
+}
+@keyframes speed-line {
+  0% {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+}
+
+/* Containers the radial map sizes its overlay type against. */
+.cq {
+  container-type: inline-size;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-beat,
+  .pulse-ring,
+  .ecg-scroll,
+  .salt-grain,
+  .shoe-bob,
+  .speed-line,
+  .moon-glow,
+  .cue-line {
+    animation: none !important;
+  }
+  .sleep-z {
+    animation: none !important;
+    opacity: 0.8;
+    transform: translate(var(--drift), -14px);
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
